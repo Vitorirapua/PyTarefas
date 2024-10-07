@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de tarefas </title>
+</head>
+<body>
+
+    <div id="wrap">
+        <header>
+            <h1>Agenda de Tarefas</h1>
+        </header>
+        <nav>
+            <a href="{{ page.href }}">{{ page.label}}</a>
+        </nav>
+        <hr><!-- apague-->
+        <main>{% block content %}{% endblock %}</main>
+        <hr><!-- apague-->
+        <footer>&copy; 2024 Vitor Irapuã</footer>
+        
+    </div>
+
+</body>
+</html>
