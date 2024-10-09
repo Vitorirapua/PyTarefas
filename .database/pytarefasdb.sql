@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS pytarefasdb;
 
 CREATE DATABASE pytarefasdb
     CHARACTER SET utf8mb4
-    COLLATE utf8mb4_general_ci;
+    COLLATE utf8mb4_unicode_ci;
 
 USE pytarefasdb;
 
@@ -14,3 +14,4 @@ CREATE TABLE task (
     expire DATETIME NOT NULL,
     status ENUM('pending', 'completed', 'deleted') DEFAULT 'pending'
 );
+

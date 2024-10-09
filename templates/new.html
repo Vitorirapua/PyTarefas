@@ -4,31 +4,112 @@
 
 <h3>Nova tarefa</h3>
 
+{% if page.created %}
+<p class="success-message">Tarefa criada com sucesso!</p>
+{% endif %}
 
-<form action="/new" method="post">
+<p>Preencha todos os campos para criar uma nova tarefa.</p>
 
-    <div>
-        <label for="name">Nome da tarefa <sup title="Digite um nome para sua nova tarefa.">(?)</sup>:</label>
+<form action="/new" method="post" class="task-form">
+
+    <div class="form-group">
+        <label for="name">
+            Nome da tarefa:
+            <sup title="Obrigatório: digite um nome para sua nova tarefa.">?</sup>
+        </label>
         <input type="text" name="name" id="name" required minlength="3">
     </div>
 
-    <div>
-        <label for="description">Descrição da tarefa <sup
-                title="Digite uma descrição detalhada para sua nova tarefa.">(?)</sup>:</label>
+    <div class="form-group">
+        <label for="description">
+            Descrição da tarefa:
+            <sup title="Obrigatório: digite uma descrição detalhada para sua nova tarefa.">?</sup>
+        </label>
         <textarea name="description" id="description" required minlength="5"></textarea>
     </div>
 
-    <div>
-        <label for="expire">Data da expiração <sup
-                title="Selecione ou digite uma data no formato 'dd/mm/AAAA HH:ii' ou deixe em branco para expirar em 30 dias">(?)</sup>:</label>
-        <input type="datetime-local" name="expire" id="expire">
+    <div class="form-group">
+        <label for="expire">
+            Data da expiração:
+            <sup title="Obrigatório: selecione ou digite uma data para a conclusão da tarefa. Ou aceite a data sugerida.">?</sup>
+        </label>
+        <input type="datetime-local" name="expire" id="expire" required value="{{page.date30}}">
     </div>
 
     <div>
-        <button type="submit">Criar Tarefa</button>
+        <button type="submit" class="submit-button">Criar tarefa</button>
     </div>
 
 </form>
 
+<script>
+    // Evita o reenvio dos formulários ao atualizar a página
+    if (window.history.replaceState) window.history.replaceState(null, null, window.location.href);
+</script>
+
+<style>
+    .success-message {
+        color: #4CAF50; /* Verde */
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    .task-form {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="datetime-local"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="datetime-local"]:focus,
+    textarea:focus {
+        border-color: #4CAF50; /* Verde */
+        outline: none;
+    }
+
+    textarea {
+        resize: vertical; /* Permite redimensionar verticalmente */
+        height: 100px; /* Altura padrão */
+    }
+
+    .submit-button {
+        background-color: #4CAF50; /* Verde */
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    .submit-button:hover {
+        background-color: #45a049; /* Verde mais escuro */
+    }
+</style>
 
 {% endblock %}
