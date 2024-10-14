@@ -1,5 +1,0 @@
-    page = {
-        'task': task,
-        'label': 'Voltar',
-        'href': '/'
-    }
