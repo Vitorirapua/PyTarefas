@@ -1,4 +1,4 @@
-from flask import Flask, json, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for
 from flask_mysqldb import MySQL
 from datetime import datetime, timedelta
 
@@ -37,7 +37,9 @@ def home():
     action = request.args.get('ac')
 
     sql = '''
-        SELECT * FROM `task`
+        SELECT *,
+        DATE_FORMAT(expire, '%d/%m/%Y às %H:%i') AS expirebr
+        FROM task
         WHERE status != 'deleted'
         ORDER BY status, expire;
     '''
@@ -46,7 +48,7 @@ def home():
     tasks = cur.fetchall()
     cur.close()
 
-    print('\n\n\n', json.dumps(tasks, indent=4, ensure_ascii=False), '\n\n\n')
+    # print('\n\n\n', tasks, '\n\n\n')
 
     page = {
         'href': '/new',
@@ -102,7 +104,7 @@ def new():
 def delete(id):
 
     sql = '''
-        UPDATE task 
+        UPDATE task
         SET status = 'deleted'
         WHERE id = %s
     '''
@@ -118,7 +120,7 @@ def delete(id):
 def check(id):
 
     sql = '''
-        UPDATE task 
+        UPDATE task
         SET status = 'completed'
         WHERE id = %s
     '''
@@ -134,7 +136,7 @@ def check(id):
 def uncheck(id):
 
     sql = '''
-        UPDATE task 
+        UPDATE task
         SET status = 'pending'
         WHERE id = %s
     '''
@@ -144,6 +146,67 @@ def uncheck(id):
     cur.close()
 
     return redirect(url_for('home', ac='pen'))
+
+
+@app.route('/edit/<id>', methods=['GET', 'POST'])
+def edit(id):
+
+    if not id.isdigit():
+        return error(404)
+
+    # Se o formulário foi enviado
+    if request.method == 'POST':
+
+        # Ler dados vindos do formulário
+        form = dict(request.form)
+
+        sql = '''
+            UPDATE task SET
+                name = %s,
+                description = %s,
+                expire = %s
+            WHERE id = %s
+                AND status != 'deleted'
+        '''
+        cur = mysql.connection.cursor()
+        cur.execute(sql, (
+            form['name'],
+            form['description'],
+            form['expire'],
+            id,
+        ))
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('home', ac='edt'))
+
+    else:
+
+        sql = '''
+            SELECT * 
+            FROM task
+            WHERE id = %s
+                AND status != 'deleted'
+        '''
+        # print('\n\n\n', sql, '\n\n\n')
+        cur = mysql.connection.cursor()
+        cur.execute(sql, (id,))
+        task = cur.fetchone()
+        cur.close()
+
+        if task == None:
+            return error(404)
+
+        # print('\n\n\n', task, '\n\n\n')
+
+    page = {
+        'task': task,
+        'label': 'Voltar',
+        'href': '/'
+    }
+
+    return render_template('edit.html', page=page)
+
 
 @app.errorhandler(404)
 def error(e):

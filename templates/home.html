@@ -103,6 +103,10 @@
 
 <p>Tarefa pendente!</p>
 
+{% elif page.action == 'edt' %}
+
+<p>Tarefa editada om sucesso!</p>
+
 {% endif %}
 
 <table>
@@ -117,7 +121,7 @@
         {% for task in page.tasks %}
         <tr>
             <td class="center neg">{{ task.name }}</td>
-            <td>{{ task.expire }}</td>
+            <td>{{ task.expirebr }}</td>
             <td>
                 <small class="actions">
                     {% if task.status == 'pending' %}
@@ -125,6 +129,7 @@
                     {% else %}
                     <a href="/uncheck/{{ task.id }}" title="Marcar como pendente">Concluida</a>
                     {% endif %}
+                    <a href="/edit/{{ task.id }} " title="Editar tarefa">Editar</a>
                     <a href="/del/{{ task.id }}" title="Apagar a Tarefa">Apagar</a>
                 </small>
             </td>
